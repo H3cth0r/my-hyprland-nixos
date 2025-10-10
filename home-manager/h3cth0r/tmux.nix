@@ -1,12 +1,22 @@
+# CORRECTED: home-manager/h3cth0r/tmux.nix
 { pkgs, ... }:
 
 {
   programs.tmux = {
     enable = true;
+
+    # This is the correct way to enable the Tmux Plugin Manager
+    pluginManager.enable = true;
+
+    # In this list, you put the plugins you want TPM to manage.
+    # You DO NOT put 'tpm' itself in this list.
     plugins = with pkgs.tmuxPlugins; [
-      tpm
       vim-tmux-navigator
+      # Add any other tmux plugins you want here in the future
     ];
+
+    # Your extra configuration remains the same.
+    # Home-Manager will automatically add the TPM startup command for you.
     extraConfig = ''
       set -g default-terminal "screen-256color"
       set -g prefix C-a
