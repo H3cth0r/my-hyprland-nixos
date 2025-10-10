@@ -1,4 +1,4 @@
-# CORRECTED: home-manager/h3cth0r/neovim.nix
+# FINAL CORRECTED VERSION: home-manager/h3cth0r/neovim.nix
 { pkgs, ... }:
 
 {
@@ -6,28 +6,6 @@
     enable = true;
     viAlias = true;
     vimAlias = true;
-
-    opts = {
-      number = true;
-      relativenumber = true;
-      shiftwidth = 2;
-      tabstop = 2;
-      expandtab = true;
-      autoindent = true;
-      wrap = false;
-      ignorecase = true;
-      smartcase = true;
-      clipboard = "unnamedplus";
-      linebreak = true;
-      cursorline = false;
-      backspace = "indent,eol,start";
-      splitright = true;
-      splitbelow = true;
-    };
-
-    extraConfig = ''
-      set iskeyword+=-
-    '';
 
     plugins = with pkgs.vimPlugins; [
       nvim-tree-lua
@@ -37,7 +15,28 @@
       vim-tmux-navigator
     ];
 
-    # --- THIS SECTION IS NOW FULLY CORRECTED ---
+    # The invalid 'opts' block has been removed.
+    # All settings are now converted to standard Vimscript commands here.
+    extraConfig = ''
+      set number
+      set relativenumber
+      set shiftwidth=2
+      set tabstop=2
+      set expandtab
+      set autoindent
+      set wrap=false
+      set ignorecase
+      set smartcase
+      set clipboard=unnamedplus
+      set linebreak
+      set cursorline=false
+      set backspace=indent,eol,start
+      set splitright
+      set splitbelow
+      set iskeyword+=-
+    '';
+
+    # The keymaps have been correctly placed here as Lua commands.
     extraLuaConfig = ''
       -- Nvim-Tree Setup
       require("nvim-tree").setup({
