@@ -1,4 +1,4 @@
-# FINAL CORRECTED VERSION: home-manager/h3cth0r/neovim.nix
+# FINAL, SELF-CONTAINED, AND CORRECTED: home-manager/h3cth0r/neovim.nix
 { pkgs, ... }:
 
 {
@@ -9,14 +9,12 @@
 
     plugins = with pkgs.vimPlugins; [
       nvim-tree-lua
-      telescope-fzf-native
+      telescope-fzf-native-nvim
       telescope-nvim
-      vim-maximizer
+      # vim-maximizer has been REMOVED to solve the error permanently.
       vim-tmux-navigator
     ];
 
-    # The invalid 'opts' block has been removed.
-    # All settings are now converted to standard Vimscript commands here.
     extraConfig = ''
       set number
       set relativenumber
@@ -36,7 +34,6 @@
       set iskeyword+=-
     '';
 
-    # The keymaps have been correctly placed here as Lua commands.
     extraLuaConfig = ''
       -- Nvim-Tree Setup
       require("nvim-tree").setup({
@@ -68,6 +65,20 @@
         },
       })
 
+      -- Self-contained window maximizer function
+      local function toggle_maximizer()
+        local current_win = vim.api.nvim_get_current_win()
+        if vim.g.maximizer_win == current_win then
+          vim.cmd('wincmd =')
+          vim.g.maximizer_win = nil
+        else
+          vim.g.maximizer_win = current_win
+          vim.cmd('wincmd |')
+          vim.cmd('wincmd _')
+        end
+      end
+      vim.g.toggle_maximizer = toggle_maximizer
+
       -- Keymaps
       local map = vim.keymap.set
       local opts = { noremap = true, silent = true }
@@ -84,7 +95,9 @@
       map("n", "<leader>tx", ":tabclose<CR>", { desc = "Close current tab", silent = true })
       map("n", "<leader>tn", ":tabn<CR>", { desc = "Next tab", silent = true })
       map("n", "<leader>tp", ":tabp<CR>", { desc = "Previous tab", silent = true })
-      map("n", "<leader>sm", ":MaximizerToggle<CR>", { desc = "Toggle maximize split", silent = true })
+      
+      -- Keymap now calls our own Lua function
+      map("n", "<leader>sm", "<cmd>lua vim.g.toggle_maximizer()<CR>", { desc = "Toggle maximize split", silent = true })
       
       -- NvimTree Keymap
       map("n", "<leader>ntt", ":NvimTreeToggle<CR>", { desc = "Toggle file tree", silent = true })
