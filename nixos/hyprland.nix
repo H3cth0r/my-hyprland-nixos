@@ -27,7 +27,7 @@
   # Fonts for a good out-of-the-box experience
   fonts.packages = with pkgs; [
     noto-fonts
-    noto-fonts-cjk
+    noto-fonts-cjk-sans
     noto-fonts-emoji
     font-awesome # For icons in Waybar
   ];

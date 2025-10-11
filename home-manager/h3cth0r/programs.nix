@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
   # Waybar configuration
@@ -36,6 +36,7 @@
   # Rofi configuration
   programs.rofi = {
     enable = true;
+    package = pkgs.rofi-wayland;
     theme = "gruvbox-dark";
   };
   

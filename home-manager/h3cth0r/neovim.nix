@@ -22,12 +22,12 @@
       set tabstop=2
       set expandtab
       set autoindent
-      set wrap=false
+      set nowrap
       set ignorecase
       set smartcase
       set clipboard=unnamedplus
       set linebreak
-      set cursorline=false
+      set nocursorline
       set backspace=indent,eol,start
       set splitright
       set splitbelow

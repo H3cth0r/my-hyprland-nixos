@@ -8,7 +8,7 @@ This repository contains a complete, flake-based NixOS configuration for a Hyprl
 *   **Display Manager**: `greetd` with `tuigreet` (lightweight and secure)
 *   **Bar**: Waybar
 *   **Launcher**: Rofi
-*   **Notifications**: SwayNC
+*   **Notifications**: SwayNC (as a service)
 *   **Terminal**: Wezterm
 *   **Editor**: Neovim (with pre-configured plugins)
 *   **Shell**: Bash with a managed `tmux` environment
@@ -20,7 +20,7 @@ Follow these steps to perform a fresh installation of NixOS using this configura
 ### Step 1: Create a Bootable USB
 
 1.  **Download the NixOS Minimal ISO.**
-    *   Go to the [NixOS downloads page](https://nixos.org/download.html) and download the "Minimal Installation Image" for the latest stable release (e.g., 24.05 or 25.05).
+    *   Go to the [NixOS downloads page](https://nixos.org/download.html) and download the "Minimal Installation Image". This configuration uses the `unstable` channel, so the latest ISO is recommended.
 
 2.  **Write the ISO to a USB drive.**
     *   First, identify your USB drive's device name (`/dev/sdX`) using `lsblk`.
@@ -36,10 +36,11 @@ Follow these steps to perform a fresh installation of NixOS using this configura
 
 1.  **Boot from the USB drive** you just created. You will land in a command-line interface.
 
-2.  **Connect to your Wi-Fi network.**
+2.  **Connect to your Wi-Fi network.** There are two common methods depending on the installer version. Try Method A first.
 
+    #### Method A: Using `iwctl` (Common)
     ```bash
-    # Start the interactive tool
+    # Start the interactive tool. If this command fails, use Method B.
     iwctl
 
     # Find your device name (usually wlan0)
@@ -58,12 +59,32 @@ Follow these steps to perform a fresh installation of NixOS using this configura
     [iwd]# exit
     ```
 
+    #### Method B: Using `wpa_cli` (If `iwctl` is not found)
+    ```bash
+    # Start the required service
+    sudo systemctl start wpa_supplicant
+
+    # Enter the interactive tool
+    wpa_cli
+
+    # Inside the tool, run these commands one by one
+    > scan
+    > add_network
+    > set_network 0 ssid "Your WiFi SSID"
+    > set_network 0 psk "YourPassword"
+    > enable_network 0
+    > quit
+
+    # Request an IP address from the network
+    sudo systemctl restart systemd-networkd
+    ```
+
 3.  **Verify the connection.**
 
     ```bash
     ping nixos.org
     ```
-    Press `Ctrl+C` to stop.
+    Press `Ctrl+C` to stop. If you see replies, you are online.
 
 ### Step 3: Partition and Format Drives
 
@@ -77,6 +98,7 @@ This guide assumes a standard UEFI system.
     sudo parted /dev/sda -- set 1 esp on
     sudo parted /dev/sda -- mkpart primary ext4 512MB 100%
     ```
+    > **Note:** You may see a message like "Information: You may need to update /etc/fstab." This is normal and can be safely ignored. The installer will generate a new, correct `fstab` for your system later.
 
 2.  **Format the partitions.**
 
@@ -108,17 +130,31 @@ This guide assumes a standard UEFI system.
     git clone <your-repo-url> /mnt/etc/nixos
     ```
 
-3.  **Generate the hardware configuration.**
+3.  **Generate and Move the Hardware Configuration.**
 
     ```bash
     # This command creates a file at /mnt/etc/nixos/hardware-configuration.nix
     nixos-generate-config --root /mnt
 
     # Move it into the correct directory within our cloned repo structure
-    mv /mnt/etc/nixos/hardware-configuration.nix /mnt/etc/nixos/nixos/
+    sudo mv /mnt/etc/nixos/hardware-configuration.nix /mnt/etc/nixos/nixos/
     ```
 
-4.  **Run the installation.**
+4.  **Add the Hardware Configuration to Git.**
+    This step is **critical**. Nix flakes will only see files that are tracked by Git.
+
+    ```bash
+    # Navigate into the repository directory
+    cd /mnt/etc/nixos
+
+    # Tell Git to trust this directory to avoid an ownership error
+    sudo git config --global --add safe.directory /mnt/etc/nixos
+
+    # Add the newly created hardware file to Git's tracking
+    sudo git add .
+    ```
+
+5.  **Run the installation.**
     The `#nixos` at the end points to the configuration defined in `flake.nix`.
 
     ```bash
@@ -133,6 +169,11 @@ This guide assumes a standard UEFI system.
     reboot
     ```
     Remove the installation USB when prompted.
+2. Ctrl + Alt + F3 to log as root with the password you used
+3. Change the password of the user
+    ```
+    passwd yourUser
+    ```
 
 2.  **Log in.**
     *   At the text-based login prompt, enter the username `h3cth0r`.
@@ -145,12 +186,3 @@ This guide assumes a standard UEFI system.
     ```bash
     passwd
     ```
-
-Your system is now ready to use!
-
-## Post-Installation
-
-To modify your system configuration:
-1.  Navigate to your configuration directory: `cd /etc/nixos/`
-2.  Edit the desired files.
-3.  Apply the changes by running: `sudo nixos-rebuild switch --flake .#nixos`

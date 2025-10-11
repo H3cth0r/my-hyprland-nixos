@@ -29,7 +29,6 @@
     
     # Styling and themeing
     swww
-    rofi-wayland
     waybar
     fastfetch
     
