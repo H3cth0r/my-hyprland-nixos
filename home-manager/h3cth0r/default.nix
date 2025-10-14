@@ -26,11 +26,15 @@
     gcc
     xclip
     unzip
+    wl-clipboard
     
     # Styling and themeing
     swww
     waybar
     fastfetch
+
+    # cursors
+    bibata-cursors
     
     # Process viewer
     btop

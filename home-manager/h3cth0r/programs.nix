@@ -1,5 +1,8 @@
 { pkgs, ... }:
 
+let
+   waybarCss = ./waybar/style.css;
+in
 {
   # Waybar configuration
   programs.waybar = {
@@ -8,9 +11,9 @@
       mainBar = {
         layer = "top";
         position = "top";
-        height = 30;
-        modules-left = [ "hyprland/workspaces" "hyprland/mode" ];
-        modules-center = [ "hyprland/window" ];
+        height = 20;
+        modules-left = [ "hyprland/mode" ];
+        modules-center = [ "hyprland/window" "hyprland/workspaces" ];
         modules-right = [ "pulseaudio" "network" "cpu" "memory" "clock" ];
         
         "hyprland/workspaces" = {
@@ -32,6 +35,8 @@
       };
     };
   };
+
+  xdg.configFile."waybar/style.css".source = waybarCss;
 
   # Rofi configuration
   programs.rofi = {

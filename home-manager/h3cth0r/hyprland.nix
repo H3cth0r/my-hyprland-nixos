@@ -50,10 +50,12 @@
             size = 3
             passes = 1
           }
-          drop_shadow = true
-          shadow_range = 4
-          shadow_render_power = 3
-          col.shadow = rgba(1a1a1aee)
+	  shadow {
+		enabled = yes
+		range = 4
+          	render_power = 3
+		color = rgba(1a1a1aee)
+	  }
       }
 
       animations {
@@ -100,6 +102,10 @@
       
       # Change wallpaper with a keybind
       bind = $mainMod, B, exec, ~/.config/hypr/scripts/wallpaper.sh
+      
+      # Blur Waybar
+      layerrule = blur, waybar
+      layerrule = ignorezero, waybar
     '';
   };
 
@@ -123,5 +129,14 @@
         swww img "$WALLPAPER" --transition-type any
       fi
     '';
+  };
+
+  gtk.cursorTheme = {
+  	name = "Bibata-Modern-Classic";
+	package = pkgs.bibata-cursors;
+  };
+  xresources.properties."Xcursor.theme" = "Bibata-Modern-Classic";
+  home.sessionVariables = {
+    XCURSOR_THEME = "Bibata-Modern-Classic";
   };
 }

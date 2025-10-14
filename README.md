@@ -186,3 +186,12 @@ This guide assumes a standard UEFI system.
     ```bash
     passwd
     ```
+
+## Setup WIFI
+```
+nmcli device wifi list
+
+nmcli device wifi connect "your-wifi-name" password "your-password"
+
+nmcli general status
+```
