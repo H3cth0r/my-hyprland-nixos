@@ -35,9 +35,15 @@
 
     # cursors
     bibata-cursors
+
+    # fonts
+    nerd-fonts.jetbrains-mono
     
     # Process viewer
     btop
+
+    # brightness control
+    brightnessctl
   ];
 
   programs.bash.enable = true;

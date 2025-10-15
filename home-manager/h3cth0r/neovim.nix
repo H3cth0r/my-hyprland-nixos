@@ -32,6 +32,11 @@
       set splitright
       set splitbelow
       set iskeyword+=-
+
+      augroup transparent_nvim
+      	autocmd!
+	autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE
+      augroup END
     '';
 
     extraLuaConfig = ''

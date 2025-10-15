@@ -5,7 +5,12 @@
     enable = true;
     extraConfig = ''
       # See https://wiki.hyprland.org/Configuring/Monitors/
-      monitor=,preferred,auto,1
+      monitor = eDP-1, 1920x1080@60, 0x0, 1
+      monitor = HDMI-A-1, preferred, 1920x0, 1
+
+      # Clamshell script
+      bindl = , switch:on:Lid Switch, exec, hyprctl --batch "keyword monitor eDP-1, disable; keyword monitor HDMI-A-1, preferred, 0x0, 1"
+      bindl = , switch:off:Lid Switch, exec, hyprctl --batch "keyword monitor eDP-1, 1920x1080@60, 0x0, 1; keyword monitor HDMI-A-1, preferred, 1920x0, 1"
 
       # Programs to launch on startup
       exec-once = waybar & swaync & swww init
@@ -38,7 +43,7 @@
           gaps_in = 5
           gaps_out = 10
           border_size = 2
-          col.active_border = rgba(33ccffee) rgba(00ff99ee) 45deg
+          col.active_border = rgba(FFFFFF4D)
           col.inactive_border = rgba(595959aa)
           layout = dwindle
       }
@@ -50,6 +55,7 @@
             size = 3
             passes = 1
           }
+	  inactive_opacity = 0.8
 	  shadow {
 		enabled = yes
 		range = 4
@@ -72,6 +78,7 @@
           pseudotile = yes
           preserve_split = yes
       }
+
 
       # Keybindings
       $mainMod = SUPER # Sets the "Windows" key as the main modifier
@@ -99,6 +106,10 @@
       bind = $mainMod SHIFT, 1, movetoworkspace, 1
       bind = $mainMod SHIFT, 2, movetoworkspace, 2
       bind = $mainMod SHIFT, 3, movetoworkspace, 3
+
+      # Move currently focused workspace to the monitor on left or right
+      bind = $mainMod ALT, left, movecurrentworkspacetomonitor, l
+      bind = $mainMod ALT, right, movecurrentworkspacetomonitor, r
       
       # Change wallpaper with a keybind
       bind = $mainMod, B, exec, ~/.config/hypr/scripts/wallpaper.sh
@@ -106,6 +117,7 @@
       # Blur Waybar
       layerrule = blur, waybar
       layerrule = ignorezero, waybar
+
     '';
   };
 
