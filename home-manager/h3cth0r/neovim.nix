@@ -8,6 +8,7 @@
     vimAlias = true;
 
     plugins = with pkgs.vimPlugins; [
+      nvim-web-devicons
       nvim-tree-lua
       telescope-fzf-native-nvim
       telescope-nvim
@@ -44,10 +45,33 @@
       require("nvim-tree").setup({
         renderer = {
           icons = {
+            show = {
+              file = true,
+              folder = true,
+              folder_arrow = true,
+              git = true,
+            },
             glyphs = {
+              default = "󰈚",
+              symlink = "",
               folder = {
-                arrow_closed = "->",
-                arrow_open = "L>",
+                arrow_closed = "▸",
+                arrow_open = "▾",
+                default = "",
+                open = "",
+                empty = "",
+                empty_open = "",
+                symlink = "",
+                symlink_open = "",
+              },
+              git = {
+                unstaged = "",
+                staged = "S",
+                unmerged = "",
+                renamed = "➜",
+                untracked = "U",
+                deleted = "",
+                ignored = "◌",
               },
             },
           },

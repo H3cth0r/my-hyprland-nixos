@@ -10,9 +10,13 @@
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    superfile = {
+    	url = "github:yorukot/superfile";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }: {
+  outputs = { self, nixpkgs, home-manager, superfile, ... }: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { };
@@ -22,6 +26,9 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
+
+	  home-manager.extraSpecialArgs = { inherit superfile; };
+
           home-manager.users.h3cth0r = import ./home-manager/h3cth0r/default.nix;
         }
       ];

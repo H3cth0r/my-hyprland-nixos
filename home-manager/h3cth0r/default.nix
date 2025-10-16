@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, superfile, ... }:
 
 {
   imports = [
@@ -16,6 +16,9 @@
   home.stateVersion = "25.05";
 
   home.packages = with pkgs; [
+
+    superfile.packages.${pkgs.system}.default
+
     # Applications
     firefox
     

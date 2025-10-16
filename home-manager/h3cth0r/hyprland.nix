@@ -118,6 +118,10 @@
       layerrule = blur, waybar
       layerrule = ignorezero, waybar
 
+      # Blur Rofi
+      layerrule = blur, rofi
+      layerrule = ignorezero, rofi
+
     '';
   };
 

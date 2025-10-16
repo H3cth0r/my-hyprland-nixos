@@ -2,6 +2,7 @@
 
 let
    waybarCss = ./waybar/style.css;
+   rofiTheme = ./rofi/style.rasi;
 in
 {
   # Waybar configuration
@@ -74,13 +75,16 @@ in
     };
   };
 
-  xdg.configFile."waybar/style.css".source = waybarCss;
+  xdg.configFile = {
+	"waybar/style.css".source = waybarCss;
+	"rofi/style.rasi".source = rofiTheme;
+  };
 
   # Rofi configuration
   programs.rofi = {
     enable = true;
     package = pkgs.rofi-wayland;
-    theme = "gruvbox-dark";
+    theme = "style.rasi";
   };
   
   # SwayNC Notification Center
